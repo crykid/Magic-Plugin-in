@@ -17,7 +17,7 @@ import dalvik.system.DexClassLoader;
 import dalvik.system.PathClassLoader;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
     private static final String TAG = "MainActivity";
     @BindView(R.id.btn_main_launch_class)
     AppCompatButton btnLaunchClass;
@@ -30,7 +30,6 @@ public class MainActivity extends Activity {
         ButterKnife.bind(this);
 
         findClassLoader();
-
 //        loadClass();
     }
 
