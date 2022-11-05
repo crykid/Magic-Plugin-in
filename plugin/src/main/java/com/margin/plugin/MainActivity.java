@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.margin.host.R;
+import com.margin.plugin.R;
 
 public class MainActivity extends AppCompatActivity {
 

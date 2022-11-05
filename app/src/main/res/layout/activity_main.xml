@@ -7,9 +7,10 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/tv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="@string/say_hi"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -27,7 +28,24 @@
             android:id="@+id/btn_main_launch_class"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="launch_class" />
+            android:text="使用插件class" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_main_load_plugin_res"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="使用插件res" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_main_load_host_res"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="使用默认res" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_main_start_plugin_Activity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="启动插件Activity" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

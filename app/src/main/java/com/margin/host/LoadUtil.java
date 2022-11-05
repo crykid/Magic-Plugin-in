@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -12,6 +14,7 @@ import android.util.Log;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.List;
@@ -26,7 +29,7 @@ import dalvik.system.PathClassLoader;
  */
 public class LoadUtil {
     private static final String TAG = "LoadUtil";
-    private final static String apkPath = "/sdcard/plugin-debug.apk";
+
     private final static String INTENT_ORIGIN_INTENT = "intent_origin_intent";
     private final static String METHOD_START_ACTIVITY = "startActivity";
     public final static String INTENT_LOAD_PLUGIN = "intent_load_plugin";
@@ -41,7 +44,7 @@ public class LoadUtil {
      * @param context
      */
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
-    public static void loadClass(Context context) {
+    public static void loadClass(Context context,String pluginAbsolutPath) {
         //Element[] dexElements 是DexPathList的一个变量；
         //DexPathList pathList 是BaseDexClassesLoader的一个变量；
         try {
@@ -59,7 +62,7 @@ public class LoadUtil {
             dexElementField.setAccessible(true);
 
             //3.创建新插件的类加载器,反射获取插件 类加载器的elements
-            DexClassLoader dexClassLoader = new DexClassLoader(apkPath, context.getCacheDir().getAbsolutePath(),
+            DexClassLoader dexClassLoader = new DexClassLoader(pluginAbsolutPath, context.getCacheDir().getAbsolutePath(),
                     null, context.getClassLoader());
             Object pluginPathList = pathListField.get(dexClassLoader);
             Object[] pluginElements = (Object[]) dexElementField.get(pluginPathList);
@@ -233,5 +236,30 @@ public class LoadUtil {
         } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * 加载插件的Resources
+     *
+     * @param context
+     * @return
+     */
+    public static Resources loadResources(Context context, String pluginAbsolutePath) {
+        try {
+            //创建加载插件的AssetManager
+            AssetManager assetManager = AssetManager.class.newInstance();
+            Method addAssetPathMethod = AssetManager.class.getDeclaredMethod("addAssetPath", String.class);
+            //加载插件的资源
+            addAssetPathMethod.invoke(assetManager, pluginAbsolutePath);
+            //获取宿主的资源
+            Resources resources = context.getResources();
+            return new Resources(assetManager, resources.getDisplayMetrics(), resources.getConfiguration());
+
+        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+            Log.e(TAG, "loadResources: ", e);
+        }
+
+        return null;
     }
 }
